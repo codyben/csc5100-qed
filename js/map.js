@@ -42,7 +42,7 @@ class LeafletMap {
 
         mapboxgl.accessToken = 'pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w';
 const map = new mapboxgl.Map({
-style: 'mapbox://styles/mapbox/satellite-streets-v11',
+style: 'mapbox://styles/mapbox/satellite-v9',
 center: [-83.066755, 42.356067],
 zoom: 18,
 pitch: 70,
@@ -62,52 +62,7 @@ map.on('load', () => {
             map.addImage('carCsc', image);
         }
     );
-// Insert the layer beneath any symbol layer.
-const layers = map.getStyle().layers;
-const labelLayerId = layers.find(
-(layer) => layer.type === 'symbol' && layer.layout['text-field']
-).id;
- 
-// The 'building' layer in the Mapbox Streets
-// vector tileset contains building height data
-// from OpenStreetMap.
-map.addLayer(
-{
-'id': 'add-3d-buildings',
-'source': 'composite',
-'source-layer': 'building',
-'filter': ['==', 'extrude', 'true'],
-'type': 'fill-extrusion',
-'minzoom': 15,
-'paint': {
-'fill-extrusion-color': '#aaa',
- 
-// Use an 'interpolate' expression to
-// add a smooth transition effect to
-// the buildings as the user zooms in.
-'fill-extrusion-height': [
-'interpolate',
-['linear'],
-['zoom'],
-15,
-0,
-15.05,
-['get', 'height']
-],
-'fill-extrusion-base': [
-'interpolate',
-['linear'],
-['zoom'],
-15,
-0,
-15.05,
-['get', 'min_height']
-],
-'fill-extrusion-opacity': 0.6
-}
-},
-labelLayerId
-);
+
 this.loadKMLs();
 });
 
@@ -283,7 +238,10 @@ this.map = map;
         // this.drivingPath.features[0].geometry.coordinates = path;
         
         this.animate();
-        this.intervalID = setInterval(() => requestAnimationFrame(() => this.animate()),this.throttle);
+        // this.intervalID = setInterval(() => requestAnimationFrame(() => this.animate()),this.throttle);
+        for(let z = 0; z < 522; z++) {
+            setTimeout(() => requestAnimationFrame(() => this.animate()), this.throttle * z);
+        }
 
     }
 
@@ -374,6 +332,7 @@ this.map = map;
     animate(timestamp) {
 
         const steps = 522;
+        if(this.counter > steps) { return; }
         // console.log(this.drivingPath);
         const start =
         this.drivingPath.features[0].geometry.coordinates[
@@ -384,10 +343,6 @@ this.map = map;
         this.counter >= steps ? this.counter : this.counter + 1
         ];
         if (!start || !end) {
-            clearInterval(this.intervalID);
-            this.weavePenalty();
-            const score = this.scorePenalties();
-            // alert("Driving Score is: " + score);
             return;
         };
 
@@ -409,7 +364,6 @@ this.map = map;
         this.map.getSource('point').setData(this.point);
         
         this.counter += 1;
-        if(this.counter > steps) { return; }
         if(this.counter > 4) {
             const temp = this.weavePenalty(false);
             const old = this.penalties.weave.raw;
