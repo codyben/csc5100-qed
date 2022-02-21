@@ -54,7 +54,7 @@ antialias: true
 map.on('load', () => {
 
     map.loadImage(
-        '/car.png', 
+        'car.png', 
         (error, image) => {
             if (error) throw error;
  
@@ -173,13 +173,13 @@ this.map = map;
         this.map.addSource('left-lane', {
             type: 'geojson',
             // Use a URL for the value for the `data` property.
-            data: '/kml/left.geojson'
+            data: 'kml/left.geojson'
             });
 
         this.map.addSource('right-lane', {
             type: 'geojson',
             // Use a URL for the value for the `data` property.
-            data: '/kml/right.geojson'
+            data: 'kml/right.geojson'
             });
 
         const layerNames = ['left-lane', 'right-lane'];
