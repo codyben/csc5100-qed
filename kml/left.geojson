@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "Left Lane",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "Left Lane", "description": null, "tessellate": 1 }, "geometry": { "type": "LineString", "coordinates": [ [ -83.066798998594749, 42.356037482371711 ], [ -83.072660363971622, 42.354200985714023 ] ] } }
+]
+}

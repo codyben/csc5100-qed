@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSC 5100 - QED Demo</title>
+	<script src="js/map.js"></script>
+	<link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
+	<script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+	<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
+</head>
+<body>
+	<style type="text/css">
+		#map { height: 50vh; }
+		form { display: flex;}
+	</style>
+
+<div class="container">
+	<div class="settings">
+		<form>
+			<input id="speed" type="range" min="2" max="30" value="11.176">
+			<label for="speed">Vehicle Speed (m/s)</label>
+
+			<input value="12" id="speed-lim" type="range" min="2" max="30">
+			<label for="speed">Speed Limit (m/s)</label>
+			
+			<input required value="5" id="s-weight" type="number" min="0" max="100">
+			<label for="s-weight">Speed Weight</label>
+
+			<input required value="3" id="l-weight" type="number" min="0" max="100">
+			<label for="l-weight">Lane Weight</label>
+
+			<input required value="10" id="w-weight" type="number" min="0" max="100">
+			<label for="w-weight">Weave Weight</label>
+
+			<input required value="16" id="p-weight" type="number" min="0" max="100">
+			<label for="p-weight">Penalty Weight</label>
+
+			<input required id="run" type="submit" value="Run Simulation!">
+			<input id="clear" type="submit" value="Clear">
+		</form>
+	</div>
+	<div class="results">
+		<p>Driving score:</p>
+		<p id="update-me">0</p>
+	</div>
+</div>
+<div id="map"></div>
+
+<script type="text/javascript">
+	"use strict";
+	window.onload = () => {window.map = new LeafletMap();};
+
+	document.getElementById("run").onclick = (e) => {
+		e.preventDefault();
+		// window.map.newMap();
+		const speed = parseInt(document.getElementById("speed").value);
+		const speedW = parseInt(document.getElementById("s-weight").value);
+		const lanew = parseInt(document.getElementById("l-weight").value);
+		const weavew = parseInt(document.getElementById("w-weight").value);
+		const penaltyw = parseInt(document.getElementById("p-weight").value);
+
+		window.map.penalties.speed.scale = speedW;
+		window.map.penalties.lane.scale = lanew;
+		window.map.penalties.weave.scale = weavew;
+		window.map.penalties.penalty.scale = penaltyw;
+		window.map.speedLimit = parseInt(document.getElementById("speed-lim").value);
+		window.map.setSpeed(speed);
+		window.map.setAnimatedMarker();
+	};
+
+	document.getElementById("clear").onclick = (e) => {
+		e.preventDefault(); 
+		window.map.newMap();
+		document.getElementById("update-me").textContent = "0";
+	
+	};
+
+
+	
+</script>
+</body>
+</html>
