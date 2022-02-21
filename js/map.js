@@ -283,7 +283,7 @@ this.map = map;
         // this.drivingPath.features[0].geometry.coordinates = path;
         
         this.animate();
-        this.intervalID = setInterval(() => this.animate(),this.throttle);
+        this.intervalID = setInterval(() => requestAnimationFrame(() => this.animate()),this.throttle);
 
     }
 
